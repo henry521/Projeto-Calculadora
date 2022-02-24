@@ -3,12 +3,16 @@ package visao;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import modelo.Memoria;
+
 @SuppressWarnings("serial")
-public class Teclado extends JPanel {
+public class Teclado extends JPanel implements ActionListener {
 	
 	private final Color COR_CINZA_ESCURO = new Color(68, 68, 68);
 	private final Color COR_CINZA_CLARO = new Color(99, 99, 99);
@@ -21,11 +25,18 @@ public class Teclado extends JPanel {
 		
 		
 		setLayout(layout);
+		
+		// Preencher espaços em branco
+		c.fill = GridBagConstraints.BOTH;
+		
+		// Teclado preenchendo a tela toda
+		c.weightx = 1;
+		c.weighty = 1;
 
 		// Primeira linha
+		c.gridwidth = 3;
 		adicionarBotao("AC", COR_CINZA_ESCURO, c, 0, 0);
-		adicionarBotao("+/-", COR_CINZA_ESCURO, c, 1, 0);
-		adicionarBotao("%", COR_CINZA_ESCURO, c, 2, 0);
+		c.gridwidth = 1;
 		adicionarBotao("/", COR_LARANJA, c, 3, 0);
 		
 		// Segunda linha
@@ -50,10 +61,12 @@ public class Teclado extends JPanel {
 		adicionarBotao("+", COR_LARANJA, c, 3, 3);
 		
 		// Quinta Linha
-	
+		
+		c.gridwidth = 2;
 		adicionarBotao("0", COR_CINZA_ESCURO, c, 0, 4);
-		adicionarBotao(".", COR_CINZA_ESCURO, c, 1, 4);
-		adicionarBotao("=", COR_LARANJA, c, 2, 4);
+		c.gridwidth = 1;
+		adicionarBotao(".", COR_CINZA_ESCURO, c, 2, 4);
+		adicionarBotao("=", COR_LARANJA, c, 3, 4);
 	
 	
 		
@@ -63,7 +76,21 @@ public class Teclado extends JPanel {
 		c.gridx = x;
 		c.gridy = y;
 		Botao botao = new Botao(texto, cor);
+		botao.addActionListener(this);
 		add(botao,c);
 		
 	}
+	
+
+	// Pegando instancia de cada botão
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() instanceof JButton) {
+			JButton botao = (JButton) e.getSource();
+			Memoria.getInstancia().processarComando(botao.getText());
+		}
+		
+		
+	}
+	 
 }
